@@ -1,0 +1,35 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/system_security?serverTimezone=Asia/Seoul
+    username: weatherMirror
+    password: qwer1234*
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false
+        highlight_sql: true
+      open-in-view: true
+logging:
+  pattern:
+    console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type.descriptor.sql: trace
+jwt:
+  access_secret: asdFsXfv3ScFj6R9fufN4Oui9hDgFsyJaFASd326SDD1GaF145Eas5w6DadF8BaA
+  refresh_secret: ufGiScj6RwaFA3das515FdFda5EdS6AdAS8B5ASD5Daf1asD515svaF4saDDN4Ou
