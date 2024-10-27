@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 9999
   servlet:
     context-path: /
     encoding:
@@ -34,4 +34,6 @@ jwt:
   access_secret: asdFsXfv3ScFj6R9fufN4Oui9hDgFsyJaFASd326SDD1GaF145Eas5w6DadF8BaA
   refresh_secret: ufGiScj6RwaFA3das515FdFda5EdS6AdAS8B5ASD5Daf1asD515svaF4saDDN4Ou
 
-apiKey: "wIWoiWwnQSmFqIlsJ7EpVA"
+apiKey:
+  kooApiKey: "wIWoiWwnQSmFqIlsJ7EpVA"
+  yungApiKey: "25BYH5IW62581N97"

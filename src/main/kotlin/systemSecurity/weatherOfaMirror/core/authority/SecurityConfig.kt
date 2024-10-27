@@ -24,7 +24,7 @@ class SecurityConfig(
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authorizeHttpRequests {
-                it.requestMatchers("/**").anonymous()
+                it.requestMatchers("/","/mirror/weather/shortTerm").anonymous()
                     .anyRequest().permitAll()
             }
             .addFilterBefore(
