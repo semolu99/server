@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
+    private val jwtTokenProvider: JwtTokenProvider
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -26,6 +27,10 @@ class SecurityConfig(
                 it.requestMatchers("/**").anonymous()
                     .anyRequest().permitAll()
             }
+            .addFilterBefore(
+                JwtAuthenticationFilter(jwtTokenProvider),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
 
         return http.build()
     }
