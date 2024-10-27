@@ -33,3 +33,5 @@ logging:
 jwt:
   access_secret: asdFsXfv3ScFj6R9fufN4Oui9hDgFsyJaFASd326SDD1GaF145Eas5w6DadF8BaA
   refresh_secret: ufGiScj6RwaFA3das515FdFda5EdS6AdAS8B5ASD5Daf1asD515svaF4saDDN4Ou
+
+apiKey: "wIWoiWwnQSmFqIlsJ7EpVA"
