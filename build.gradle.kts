@@ -1,9 +1,10 @@
 plugins {
-	kotlin("jvm") version "1.9.25"
-	kotlin("plugin.spring") version "1.9.25"
+	val version = "1.9.25"
+	kotlin("jvm") version version
+	kotlin("plugin.spring") version version
 	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.6"
-	kotlin("plugin.jpa") version "1.9.25"
+	kotlin("plugin.jpa") version version
 }
 
 group = "systemSecurity"
