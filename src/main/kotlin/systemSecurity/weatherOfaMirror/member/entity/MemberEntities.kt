@@ -4,6 +4,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.*
 import systemSecurity.weatherOfaMirror.core.status.Area
 import systemSecurity.weatherOfaMirror.core.status.ROLE
+import systemSecurity.weatherOfaMirror.member.dto.MemberDtoResponse
 
 @Entity
 @Table(
@@ -34,6 +35,9 @@ class Member(
 ) {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     val memberRole: List<MemberRole>? = null
+
+    fun toDto(): MemberDtoResponse =
+        MemberDtoResponse(id!!, loginId, name,email, area.des)
 }
 
 @Entity

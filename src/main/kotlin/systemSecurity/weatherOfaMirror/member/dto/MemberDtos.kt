@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
-import systemSecurity.weatherOfaMirror.core.anntation.ValidEnum
+import systemSecurity.weatherOfaMirror.core.annotation.ValidEnum
 import systemSecurity.weatherOfaMirror.core.status.Area
 import systemSecurity.weatherOfaMirror.member.entity.Member
 
-data class MemberDtoRequset(
+data class MemberDtoRequest(
     val id: Long?,
 
     @field:NotBlank
@@ -72,3 +72,11 @@ data class LoginDto(
     val password: String
         get() = _password!!
 }
+
+data class MemberDtoResponse(
+    val id: Long,
+    val loginId: String,
+    val name: String,
+    val email: String,
+    val area: String
+)

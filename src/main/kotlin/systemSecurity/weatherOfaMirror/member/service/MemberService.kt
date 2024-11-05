@@ -1,15 +1,18 @@
 package systemSecurity.weatherOfaMirror.member.service
 
 import jakarta.transaction.Transactional
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.stereotype.Service
 import systemSecurity.weatherOfaMirror.core.authority.JwtTokenProvider
 import systemSecurity.weatherOfaMirror.core.authority.TokenInfo
-import systemSecurity.weatherOfaMirror.core.status.Area
+import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 import systemSecurity.weatherOfaMirror.core.status.ROLE
+import systemSecurity.weatherOfaMirror.core.status.ResultCode
 import systemSecurity.weatherOfaMirror.member.dto.LoginDto
-import systemSecurity.weatherOfaMirror.member.dto.MemberDtoRequset
+import systemSecurity.weatherOfaMirror.member.dto.MemberDtoRequest
+import systemSecurity.weatherOfaMirror.member.dto.MemberDtoResponse
 import systemSecurity.weatherOfaMirror.member.entity.Member
 import systemSecurity.weatherOfaMirror.member.entity.MemberRole
 import systemSecurity.weatherOfaMirror.member.repository.MemberRepository
@@ -26,13 +29,13 @@ class MemberService(
     /**
      * 회원가입
      */
-    fun signUp(memberDtoRequset: MemberDtoRequset): String{
-        var member: Member? = memberRepository.findByLoginId(memberDtoRequset.loginId)
+    fun signUp(memberDtoRequest: MemberDtoRequest): String{
+        var member: Member? = memberRepository.findByLoginId(memberDtoRequest.loginId)
         if(member != null){
             return "이미 등록된 ID 입니다."
         }
 
-        member = memberDtoRequset.toEntity()
+        member = memberDtoRequest.toEntity()
         memberRepository.save(member)
 
         val memberRole = MemberRole(null, ROLE.MEMBER, member)
@@ -48,5 +51,12 @@ class MemberService(
         val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
 
         return jwtTokenProvider.createToken(authentication)
+    }
+    /**
+     * 내 정보 보기
+     */
+    fun searchMyInfo(id: Long):MemberDtoResponse{
+        val member : Member = memberRepository.findByIdOrNull(id)?: throw InvalidInputException("id","해당 회원 번호는 존재 하지 않은 유저입니다.")
+        return member.toDto()
     }
 }

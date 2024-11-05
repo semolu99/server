@@ -1,4 +1,4 @@
-package systemSecurity.weatherOfaMirror.core.anntation
+package systemSecurity.weatherOfaMirror.core.annotation
 
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator

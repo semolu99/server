@@ -14,8 +14,8 @@ class WeatherController(
     private val weatherService: WeatherService
 ) {
     @GetMapping("/shortTerm")
-    fun shortTerm(@RequestBody weatherDto: WeatherDto):String?{
-        val result:String? = weatherService.shortTerm(weatherDto)
+    fun shortTerm(/*@RequestBody weatherDto: WeatherDto*/):String?{
+        val result:String? = weatherService.shortTerm(/*weatherDto*/)
         return result
     }
 
