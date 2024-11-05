@@ -1,1 +1,25 @@
 GET localhost:8080/mirror/weather/shortTerm
+
+###
+
+GET localhost:8080/mirror/weather/shelter
+
+###
+
+GET localhost:8080/mirror/weather/disasterMsg
+
+###
+
+GET localhost:8080/mirror/weather/earthQuake
+
+###
+
+GET localhost:8080/mirror/weather/typhoon
+
+###
+
+GET localhost:8080/mirror/weather/aws
+
+###
+
+GET localhost:8080/mirror/weather/live

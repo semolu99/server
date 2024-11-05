@@ -5,16 +5,39 @@ import org.springframework.stereotype.Component
 
 @Component
 class Apikey {
-    @Value("\${apiKey.kooApiKey}")
-    lateinit var kooApiKey: String
+    @Value("\${apiKey.ShelterApiKey}")
+    lateinit var ShelterApiKey: String
 
-    @Value("\${apiKey.yungApiKey}")
-    lateinit var yungApiKey: String
+    @Value("\${apiKey.DisasterApiKey}")
+    lateinit var DisasterApiKey: String
 
-    fun getKooApikey(): String {
-        return kooApiKey
+    @Value("\${apiKey.WhetherApiKey}")
+    lateinit var WhetherApiKey: String
+
+    @Value("\${apiKey.AWSApiKey}")
+    lateinit var AWSApiKey: String
+
+    @Value("\${apiKey.LiveApiKey}")
+    lateinit var LiveApiKey: String
+
+    fun getShelterApikey(): String {
+        return ShelterApiKey
     }
-    fun getYungApikey(): String {
-        return yungApiKey
+
+    fun getDisasterApikey(): String {
+        return DisasterApiKey
     }
+
+    fun getWhetherApikey(): String {
+        return WhetherApiKey
+    }
+
+    fun getAWSApikey(): String {
+        return AWSApiKey
+    }
+
+    fun getLiveApikey(): String {
+        return LiveApiKey
+    }
+
 }
