@@ -20,3 +20,41 @@ data class ShelterDto(
     val startLat: String?,
     val endLat: String?,
 )
+
+data class DisasterMsgDto(
+    val numOfRows: String?,
+    val pageNo: String?,
+    val returnType: String?,
+    val crtDt: String?,
+    val rgnNm: String?,
+)
+
+data class EarthQuakeDto(
+    val tm: String?,
+    val disp: String?,
+    val help: String?,
+)
+
+data class TyphoonDto(
+    val YY: String?,
+    val disp: String?,
+    val help: String,
+    val typ: String,
+    val seq: String?,
+    val mode: String?,
+    val tm: String?,
+)
+
+data class AwsDto(
+    val numOfRows: String?,
+    val pageNo: String?,
+    val returnType: String?,
+    val AWS_OBSVTR_CD: String?,
+    val OBSRVN_HR: String?,
+)
+
+data class LiveDto(
+    val numOfRows: String?,
+    val pageNo: String?,
+    val returnType: String?,
+)

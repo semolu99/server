@@ -35,5 +35,8 @@ jwt:
   refresh_secret: ufGiScj6RwaFA3das515FdFda5EdS6AdAS8B5ASD5Daf1asD515svaF4saDDN4Ou
 
 apiKey:
-  kooApiKey: "wIWoiWwnQSmFqIlsJ7EpVA"
-  yungApiKey: "25BYH5IW62581N97"
+  WhetherApiKey: "j2NqIzgmQw6jaiM4JpMOmw"
+  ShelterApiKey: "25BYH5IW62581N97"
+  DisasterApiKey: "81X83SEL71R5J975"
+  AWSApiKey: "2I95H7GWQAI805B6"
+  LiveApiKey: "A375OG91TR532842"
