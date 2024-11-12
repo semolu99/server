@@ -6,7 +6,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
-import systemSecurity.weatherOfaMirror.core.anntation.Apikey
+import systemSecurity.weatherOfaMirror.core.annotation.Apikey
 import systemSecurity.weatherOfaMirror.weatherCast.dto.AwsDto
 import systemSecurity.weatherOfaMirror.weatherCast.dto.ShelterDto
 import systemSecurity.weatherOfaMirror.weatherCast.dto.WeatherDto

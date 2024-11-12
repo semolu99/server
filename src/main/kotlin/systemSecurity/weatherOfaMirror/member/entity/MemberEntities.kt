@@ -5,6 +5,7 @@ import jakarta.persistence.*
 import systemSecurity.weatherOfaMirror.core.status.Area
 import systemSecurity.weatherOfaMirror.core.status.ROLE
 import systemSecurity.weatherOfaMirror.member.dto.MemberDtoResponse
+import systemSecurity.weatherOfaMirror.member.dto.MemberMirrorDtoResponse
 
 @Entity
 @Table(
@@ -20,7 +21,7 @@ class Member(
     @Column(nullable = false, length = 30, updatable = false)
     val loginId: String,
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     val password: String,
 
     @Column(nullable = false, length = 10)
@@ -54,3 +55,23 @@ class MemberRole(
     @JoinColumn(foreignKey = ForeignKey(name = "fk_user_role_member_id"))
     val member: Member,
 )
+
+@Entity
+class Mirror(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
+
+    @Column(nullable = false, length = 32)
+    val mirrorCode : String,
+
+    @Column(nullable = false, length = 20)
+    val mirrorName :String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = ForeignKey(name = "fk_mirror_member_id"))
+    val member: Member
+){
+    fun toDto(): MemberMirrorDtoResponse =
+        MemberMirrorDtoResponse(id!!, mirrorCode, mirrorName)
+}

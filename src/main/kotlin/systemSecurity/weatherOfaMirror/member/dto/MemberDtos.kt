@@ -1,9 +1,11 @@
 package systemSecurity.weatherOfaMirror.member.dto
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder
 import systemSecurity.weatherOfaMirror.core.annotation.ValidEnum
 import systemSecurity.weatherOfaMirror.core.status.Area
 import systemSecurity.weatherOfaMirror.member.entity.Member
@@ -38,11 +40,13 @@ data class MemberDtoRequest(
     @JsonProperty("area")
     private val _area: String?,
 ) {
+    val encoder = SCryptPasswordEncoder(16,8,1,32,64)
+
     val loginId: String
         get() = _loginId!!
 
     val password: String
-        get() = _password!!
+        get() = encoder.encode(_password!!)
 
     val name: String
         get() = _name!!
@@ -79,4 +83,28 @@ data class MemberDtoResponse(
     val name: String,
     val email: String,
     val area: String
+)
+
+data class MemberMirrorDtoRequest(
+    val id : Long,
+
+    @field:NotBlank
+    @JsonProperty("mirrorCode")
+    private val _mirrorCode: String?,
+
+    @field:NotBlank
+    @JsonProperty("mirrorName")
+    private val _mirrorName: String?,
+){
+    val mirrorCode : String
+        get() = _mirrorCode!!
+
+    val mirrorName :String
+        get() = _mirrorName!!
+}
+
+data class MemberMirrorDtoResponse(
+    val id:Long,
+    val mirrorCode:String,
+    val mirrorName:String
 )

@@ -45,6 +45,10 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 	implementation("org.springframework:spring-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-mustache")
+	implementation("org.springframework.security:spring-security-crypto")
+	implementation("org.bouncycastle:bcprov-jdk15on:1.70")
+
 }
 
 kotlin {
