@@ -7,14 +7,13 @@ import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import systemSecurity.weatherOfaMirror.core.annotation.Apikey
-import systemSecurity.weatherOfaMirror.weatherCast.dto.AwsDto
-import systemSecurity.weatherOfaMirror.weatherCast.dto.ShelterDto
-import systemSecurity.weatherOfaMirror.weatherCast.dto.WeatherDto
+import systemSecurity.weatherOfaMirror.member.repository.MemberRepository
 
 @Service
 @Transactional
 class WeatherService(
-    apikey: Apikey
+    apikey: Apikey,
+    private val memberRepository: MemberRepository
 ) {
     val shelterApikey: String = apikey.getShelterApikey()
     val disasterApikey: String = apikey.getDisasterApikey()
@@ -37,7 +36,6 @@ class WeatherService(
             .header("authKey", whetherApikey)
             .retrieve()
             .bodyToMono<String>()
-
         val result = response.block()
         return result
     }
