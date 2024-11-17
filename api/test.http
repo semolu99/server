@@ -1,4 +1,9 @@
 GET localhost:8080/mirror/weather/shortTerm
+Content-Type: application/json
+
+{
+  "area": "서울"
+}
 
 ###
 
@@ -23,3 +28,7 @@ GET localhost:8080/mirror/weather/aws
 ###
 
 GET localhost:8080/mirror/weather/live
+
+###
+GET https://dapi.kakao.com/v2/local/search/address.json
+Authorization: KakaoAK 240fd966162140d476b7e85812519a6c

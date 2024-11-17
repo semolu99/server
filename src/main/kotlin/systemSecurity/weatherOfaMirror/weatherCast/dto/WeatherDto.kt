@@ -1,15 +1,23 @@
 package systemSecurity.weatherOfaMirror.weatherCast.dto
 
+
+data class AreaPointDtoRequest(
+    val area: String?
+)
+
+class MapXYDtoRequest(
+    val x: String,
+    val y: String
+)
+
 data class WeatherDto(
-    val stn: String?,
-    val reg: String?,
-    val tmfc: String?,
-    val tmfc1: String?,
-    val tmfc2: String?,
-    val tmef1: String?,
-    val tmef2: String?,
-    val disp: String?,
-    val help: String?,
+    val pageNo: String?,
+    val numOfRows: String?,
+    val dataType: String?,
+    val base_date: String?,
+    val base_time: String?,
+    val nx: String?,
+    val ny: String?,
 )
 
 data class ShelterDto(

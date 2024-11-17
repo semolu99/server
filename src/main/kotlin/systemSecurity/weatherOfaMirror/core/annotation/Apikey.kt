@@ -20,6 +20,9 @@ class Apikey {
     @Value("\${apiKey.LiveApiKey}")
     lateinit var LiveApiKey: String
 
+    @Value("\${apiKey.KakaoApiKey}")
+    lateinit var CoordinateApiKey: String
+
     fun getShelterApikey(): String {
         return ShelterApiKey
     }
@@ -38,6 +41,10 @@ class Apikey {
 
     fun getLiveApikey(): String {
         return LiveApiKey
+    }
+
+    fun getKakaoApiKey(): String {
+        return CoordinateApiKey
     }
 
 }

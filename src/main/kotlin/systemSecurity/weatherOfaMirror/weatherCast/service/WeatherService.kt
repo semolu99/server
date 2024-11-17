@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import systemSecurity.weatherOfaMirror.core.annotation.Apikey
-import systemSecurity.weatherOfaMirror.member.repository.MemberRepository
+import java.time.LocalDateTime
 
 @Service
 @Transactional
 class WeatherService(
     apikey: Apikey,
-    private val memberRepository: MemberRepository
+    private val locationService: LocationService
 ) {
     val shelterApikey: String = apikey.getShelterApikey()
     val disasterApikey: String = apikey.getDisasterApikey()
@@ -21,7 +21,17 @@ class WeatherService(
     val LiveApikey: String = apikey.getLiveApikey()
     val AWSApikey: String = apikey.getAWSApikey()
 
-    fun shortTerm(/*weatherDto : WeatherDto*/): String? {
+    fun shortTerm(area: String): String? {
+        val localtime = LocalDateTime.now().toString()
+        val splitTime = localtime.split("-")
+        val day = splitTime[2].split("T")
+        val time = day[1].split(":")
+        val now = splitTime[0] + splitTime[1] + day[0]
+        val nowTime = time[0]+time[1]
+
+        val coordinates = locationService.fetchCoordinatesFromAddress(area)
+        println(coordinates?.x)
+        println(coordinates?.y)
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://apihub.kma.go.kr")
@@ -30,12 +40,21 @@ class WeatherService(
         val response = webClient
             .get()
             .uri {
-                it.path("api/typ01/url/fct_shrt_reg.php")
-                    .build()
+                it.path("api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtNcst")
+                    .queryParam("authKey", whetherApikey)
+                    .queryParam("pageNo", 1)
+                    .queryParam("numOfRows", 1000)
+                    .queryParam("dataType", "JSON")
+                    .queryParam("base_date",now)
+                    .queryParam("base_time", nowTime)
+                    .queryParam("nx",coordinates?.x)
+                    .queryParam("ny",coordinates?.y)
+                .build()
             }
-            .header("authKey", whetherApikey)
             .retrieve()
             .bodyToMono<String>()
+        println(response.block())
+
         val result = response.block()
         return result
     }
@@ -61,6 +80,9 @@ class WeatherService(
     }
 
     fun disasterMsg(/*shelterDto: ShelterDto*/): String? {
+        val localtime = LocalDateTime.now().toString()
+        val splitTime = localtime.split("-")
+        val now = splitTime[0] + splitTime[1] + splitTime[2].split("T")[0]
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://www.safetydata.go.kr")
@@ -71,6 +93,7 @@ class WeatherService(
             .uri {
                 it.path("/V2/api/DSSP-IF-00247")
                     .queryParam("serviceKey", disasterApikey)
+                    .queryParam("crtDt", now)
                     .build()
             }
             .retrieve()
