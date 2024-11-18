@@ -24,8 +24,8 @@ class SecurityConfig(
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authorizeHttpRequests {
-                it.requestMatchers("/","/mirror/weather/shortTerm","/mirror/member/signup", "/mirror/member/login").anonymous()
-                    .requestMatchers("/mirror/member/**").hasRole("MEMBER")
+                it.requestMatchers("/","/mirror/member/signup", "/mirror/member/login").anonymous()
+                    .requestMatchers("/mirror/member/**","/mirror/weather/shortTerm").hasRole("MEMBER")
                     .anyRequest().permitAll()
             }
             .addFilterBefore(

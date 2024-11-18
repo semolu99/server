@@ -1,5 +1,6 @@
 package systemSecurity.weatherOfaMirror.weatherCast.service
 
+import com.google.gson.Gson
 import jakarta.transaction.Transactional
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import systemSecurity.weatherOfaMirror.core.annotation.Apikey
+import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 import java.time.LocalDateTime
 
 @Service
@@ -21,16 +23,16 @@ class WeatherService(
     val LiveApikey: String = apikey.getLiveApikey()
     val AWSApikey: String = apikey.getAWSApikey()
 
-    fun shortTerm(area: String): String? {
+    fun shortTerm(area: String): Map<*, *>? {
         val localtime = LocalDateTime.now().toString()
         val splitTime = localtime.split("-")
         val day = splitTime[2].split("T")
         val time = day[1].split(":")
         val now = splitTime[0] + splitTime[1] + day[0]
-        val nowTime = time[0]+time[1]
-        val coordinates = locationService.fetchCoordinatesFromAddress(area)
-        println(coordinates?.x?.toInt())
-        println(coordinates?.y?.toInt())
+        val nowTime = time[0] + time[1]
+        val coordinates = locationService.fetchCoordinatesFromAddress(area)?:throw InvalidInputException("지역","오류")
+        println(coordinates.x.toInt())
+        println(coordinates.y.toInt())
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://apihub.kma.go.kr")
@@ -44,18 +46,17 @@ class WeatherService(
                     .queryParam("pageNo", 1)
                     .queryParam("numOfRows", 1000)
                     .queryParam("dataType", "JSON")
-                    .queryParam("base_date",now)
+                    .queryParam("base_date", now)
                     .queryParam("base_time", nowTime)
-                    .queryParam("nx",coordinates?.x?.toInt())
-                    .queryParam("ny",coordinates?.y?.toInt())
-                .build()
+                    .queryParam("nx", coordinates.x.toInt())
+                    .queryParam("ny", coordinates.y.toInt())
+                    .build()
             }
             .retrieve()
             .bodyToMono<String>()
-        println(response.block())
-
         val result = response.block()
-        return result
+        val gson = Gson()
+        return gson.fromJson(result, Map::class.java)
     }
 
     fun shelter(/*shelterDto: ShelterDto*/): String? {
@@ -74,8 +75,7 @@ class WeatherService(
             .retrieve()
             .bodyToMono<String>()
 
-        val result = response.block()
-        return result
+        return response.block()
     }
 
     fun disasterMsg(/*shelterDto: ShelterDto*/): String? {
@@ -97,46 +97,43 @@ class WeatherService(
             }
             .retrieve()
             .bodyToMono<String>()
-        val result = response.block()
-        return result
+        return response.block()
     }
 
-    fun earthQuake(/*earthQuakeDto: EarthQuakeDto*/):String? {
-        val webClient : WebClient = WebClient
+    fun earthQuake(/*earthQuakeDto: EarthQuakeDto*/): String? {
+        val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://apihub.kma.go.kr")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build()
         val response = webClient
             .get()
-            .uri{
+            .uri {
                 it.path("api/typ01/url/eqk_now.php")
-                    .queryParam("authKey",whetherApikey)
+                    .queryParam("authKey", whetherApikey)
                     .build()
             }
             .retrieve()
             .bodyToMono<String>()
-        val result = response.block()
-        return result
+        return response.block()
     }
 
-    fun typhoon(/*typhoonDto: TyphoonDto*/):String? {
-        val webClient : WebClient = WebClient
+    fun typhoon(/*typhoonDto: TyphoonDto*/): String? {
+        val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://apihub.kma.go.kr")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build()
         val response = webClient
             .get()
-            .uri{
+            .uri {
                 it.path("api/typ01/url/typ_now.php")
-                    .queryParam("authKey",whetherApikey)
+                    .queryParam("authKey", whetherApikey)
                     .build()
             }
             .retrieve()
             .bodyToMono<String>()
-        val result = response.block()
-        return result
+        return response.block()
     }
 
     fun aws(/*awsDto: AWSDto*/): String? {
@@ -154,8 +151,7 @@ class WeatherService(
             }
             .retrieve()
             .bodyToMono<String>()
-        val result = response.block()
-        return result
+        return response.block()
     }
 
     fun live(/*liveDto: LiveDto*/): String? {
@@ -173,7 +169,6 @@ class WeatherService(
             }
             .retrieve()
             .bodyToMono<String>()
-        val result = response.block()
-        return result
+        return response.block()
     }
 }

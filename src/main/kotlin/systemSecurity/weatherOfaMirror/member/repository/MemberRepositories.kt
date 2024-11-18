@@ -10,6 +10,7 @@ import systemSecurity.weatherOfaMirror.member.entity.Mirror
 interface MemberRepository : JpaRepository<Member, Long>{
     //ID 중복 검사용
     fun findByLoginId(LoginId: String): Member?
+    fun findMemberById(id: Long): Member?
 }
 
 interface MemberRoleRepository : JpaRepository<MemberRole, Long>

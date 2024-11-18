@@ -35,14 +35,6 @@ class LambertProjection {
         return gridCoords
     }
 
-    fun convertToLatLon(grid: GridCoordinates): Coordinates {
-        val x = grid.x - 1
-        val y = grid.y - 1
-        val coord = Coordinates(0.0, 0.0)
-        lamcproj(x, y, coord, 1)
-        return coord
-    }
-
     private fun lamcproj(input1: Double, input2: Double, result: Any, code: Int) {
         val re = map.Re / map.grid
         val slat1 = map.slat1 * DEGRAD
@@ -50,12 +42,12 @@ class LambertProjection {
         val olon = map.olon * DEGRAD
         val olat = map.olat * DEGRAD
 
-        if (!map.first) {
-            val sn = ln(cos(slat1) / cos(slat2)) / ln(tan(PI * 0.25 + slat2 * 0.5) / tan(PI * 0.25 + slat1 * 0.5))
-            val sf = tan(PI * 0.25 + slat1 * 0.5).pow(sn) * cos(slat1) / sn
-            val ro = re * sf / tan(PI * 0.25 + olat * 0.5).pow(sn)
-            map.first = true
-        }
+//        if (!map.first) {
+//            val sn = ln(cos(slat1) / cos(slat2)) / ln(tan(PI * 0.25 + slat2 * 0.5) / tan(PI * 0.25 + slat1 * 0.5))
+//            val sf = tan(PI * 0.25 + slat1 * 0.5).pow(sn) * cos(slat1) / sn
+//            val ro = re * sf / tan(PI * 0.25 + olat * 0.5).pow(sn)
+//            map.first = true
+//        }
 
         val sn = ln(cos(slat1) / cos(slat2)) / ln(tan(PI * 0.25 + slat2 * 0.5) / tan(PI * 0.25 + slat1 * 0.5))
         val sf = tan(PI * 0.25 + slat1 * 0.5).pow(sn) * cos(slat1) / sn
@@ -85,29 +77,3 @@ class LambertProjection {
         }
     }
 }
-
-fun main(args: Array<String>) {
-    val lambert = LambertProjection()
-
-    if (args.size != 3) {
-        println("Usage: [0 <longitude> <latitude>] or [1 <X-grid> <Y-grid>]")
-        return
-    }
-
-    val mode = args[0].toInt()
-    val input1 = args[1].toDouble()
-    val input2 = args[2].toDouble()
-
-    if (mode == 0) {
-        val coordinates = LambertProjection.Coordinates(input1, input2)
-        val gridCoordinates = lambert.convertToGrid(coordinates)
-        println("lon.= ${coordinates.lon}, lat.= ${coordinates.lat} ---> X = ${gridCoordinates.x.toInt()}, Y = ${gridCoordinates.y.toInt()}")
-    } else if (mode == 1) {
-        val gridCoordinates = LambertProjection.GridCoordinates(input1, input2)
-        val coordinates = lambert.convertToLatLon(gridCoordinates)
-        println("X = ${gridCoordinates.x.toInt()}, Y = ${gridCoordinates.y.toInt()} ---> lon.= ${coordinates.lon}, lat.= ${coordinates.lat}")
-    } else {
-        println("Invalid mode. Use 0 for lon/lat to grid or 1 for grid to lon/lat.")
-    }
-}
-

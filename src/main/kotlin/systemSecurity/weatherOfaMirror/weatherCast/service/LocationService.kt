@@ -15,7 +15,6 @@ import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 import systemSecurity.weatherOfaMirror.core.global.LambertProjection
 import systemSecurity.weatherOfaMirror.core.global.LambertProjection.GridCoordinates
 //import systemSecurity.weatherOfaMirror.core.global.ConvertGPS
-import systemSecurity.weatherOfaMirror.weatherCast.dto.MapXYDtoRequest
 
 @Service
 @Transactional
@@ -51,10 +50,8 @@ class LocationService(
                 ?: throw InvalidInputException()
             xPoint = firstDocument.x
             yPoint = firstDocument.y
-            val mapXY=lambertProjection.convertToGrid(LambertProjection.Coordinates(xPoint, yPoint))
-            println(mapXY.toString())
 
-            return mapXY
+            return lambertProjection.convertToGrid(LambertProjection.Coordinates(xPoint, yPoint))
         }
 
         return null
