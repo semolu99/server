@@ -28,10 +28,9 @@ class WeatherService(
         val time = day[1].split(":")
         val now = splitTime[0] + splitTime[1] + day[0]
         val nowTime = time[0]+time[1]
-
         val coordinates = locationService.fetchCoordinatesFromAddress(area)
-        println(coordinates?.x)
-        println(coordinates?.y)
+        println(coordinates?.x?.toInt())
+        println(coordinates?.y?.toInt())
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://apihub.kma.go.kr")
@@ -47,8 +46,8 @@ class WeatherService(
                     .queryParam("dataType", "JSON")
                     .queryParam("base_date",now)
                     .queryParam("base_time", nowTime)
-                    .queryParam("nx",coordinates?.x)
-                    .queryParam("ny",coordinates?.y)
+                    .queryParam("nx",coordinates?.x?.toInt())
+                    .queryParam("ny",coordinates?.y?.toInt())
                 .build()
             }
             .retrieve()

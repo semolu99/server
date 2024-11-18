@@ -12,19 +12,22 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import systemSecurity.weatherOfaMirror.core.annotation.Apikey
 import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
-import systemSecurity.weatherOfaMirror.core.global.ConvertGPS
+import systemSecurity.weatherOfaMirror.core.global.LambertProjection
+import systemSecurity.weatherOfaMirror.core.global.LambertProjection.GridCoordinates
+//import systemSecurity.weatherOfaMirror.core.global.ConvertGPS
 import systemSecurity.weatherOfaMirror.weatherCast.dto.MapXYDtoRequest
 
 @Service
 @Transactional
 class LocationService(
     apikey: Apikey,
-    private val convertGPS: ConvertGPS,
+    //private val convertGPS: ConvertGPS,
+    private val lambertProjection: LambertProjection
 ){
     val CoordinateApiKey: String = apikey.getKakaoApiKey()
     private val objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()
 
-    fun fetchCoordinatesFromAddress(area: String): MapXYDtoRequest? {
+    fun fetchCoordinatesFromAddress(area: String): GridCoordinates? {
         val xPoint : Double
         val yPoint : Double
         val url = WebClient
@@ -48,9 +51,9 @@ class LocationService(
                 ?: throw InvalidInputException()
             xPoint = firstDocument.x
             yPoint = firstDocument.y
-            println(xPoint.toString()+"\n${yPoint.toString()}")
-            val mapXY =convertGPS.convertGPStoXY(xPoint, yPoint)
-            println("****${mapXY.x}")
+            val mapXY=lambertProjection.convertToGrid(LambertProjection.Coordinates(xPoint, yPoint))
+            println(mapXY.toString())
+
             return mapXY
         }
 

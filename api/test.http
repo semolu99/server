@@ -2,7 +2,7 @@ GET localhost:8080/mirror/weather/shortTerm
 Content-Type: application/json
 
 {
-  "area": "서울"
+  "area": "봉담"
 }
 
 ###
