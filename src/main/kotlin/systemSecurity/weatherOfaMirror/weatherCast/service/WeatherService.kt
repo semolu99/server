@@ -90,7 +90,7 @@ class WeatherService(
         return gson.fromJson(result, Map::class.java)
     }
 
-    fun disasterMsg(area: String): String? {
+    fun disasterMsg(area: String): Map<*,*>? {
         val localtime = LocalDateTime.now().toString()
         val splitTime = localtime.split("-")
         val now = splitTime[0] + splitTime[1] + splitTime[2].split("T")[0]
@@ -114,7 +114,9 @@ class WeatherService(
             }
             .retrieve()
             .bodyToMono<String>()
-        return response.block()
+        val result = response.block()
+        val gson = Gson()
+        return gson.fromJson(result, Map::class.java)
     }
 
     fun earthQuake(/*earthQuakeDto: EarthQuakeDto*/): String? {

@@ -43,21 +43,36 @@ class WeatherController(
         return weatherService.shortTerm(mirror.member.area.des)
     }
 
-    @GetMapping("/shelter/{area}")//대피소 정보
-    fun shelter(@PathVariable area: String): BaseResponse<Map<*,*>>?{
+    @GetMapping("/shelter/{area}")//대피소 정보 검색
+    fun searchShelter(@PathVariable area: String): BaseResponse<Map<*,*>>?{
         return BaseResponse(data = weatherService.shelter(area))
     }
 
-    @GetMapping("/disasterMsg/{area}")//재난 문자
-    fun disasterMsg(@PathVariable area: String):String?{
-        val result:String? = weatherService.disasterMsg(area)
-        return result
+    @GetMapping("/shelter")//대피소 정보 회원
+    fun memberShelter(): BaseResponse<Map<*,*>>?{
+        val userId = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userId
+        val member = memberRepository.findMemberById(userId)?: throw InvalidInputException("member","존재 하지 않는 멤버")
+        return BaseResponse(data = weatherService.shelter(member.area.des))
     }
 
-    @GetMapping("/weatherMapService")//지도 날씨 출력
-    fun weatherMapService():String?{
-        val result:String = weatherMapService.weatherMapService()
-        return result
+    @GetMapping("/disasterMsg")//재난 문자
+    fun disasterMsg(): BaseResponse<Map<*,*>>? {
+        val userId = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userId
+        val member = memberRepository.findMemberById(userId)?: throw InvalidInputException("member","존재 하지 않는 멤버")
+        return BaseResponse(data = weatherService.disasterMsg(member.area.des))
+    }
+
+    @GetMapping("/weatherMapService")//지도 날씨 출력 회원
+    fun weatherMapService(): BaseResponse<Map<*,*>>? {
+        val userId = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userId
+        memberRepository.findMemberById(userId)?: throw InvalidInputException("member","존재 하지 않는 멤버")
+        return BaseResponse(data = weatherMapService.weatherMapService())
+    }
+
+    @GetMapping("/weatherMapService/mirror")//지도 날씨 출력 거울
+    fun mirrorWeatherMapService(@RequestHeader("mirrorCode") mirrorCode:String): BaseResponse<Map<*,*>>? {
+        mirrorRepository.findByMirrorCode(mirrorCode) ?: throw InvalidInputException("mirror code","존재하지 않는 정보입니다.")
+        return BaseResponse(data = weatherMapService.weatherMapService())
     }
 
     @GetMapping("/earthQuake")

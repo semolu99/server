@@ -1,21 +1,26 @@
+### 현재날씨 검색
 GET localhost:8080/mirror/weather/shortTerm/인천
-###
+### 현재날씨 회원
 GET localhost:8080/mirror/weather/shortTerm
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYXJibzk1MTAiLCJhdXRoIjoiUk9MRV9NRU1CRVIiLCJ1c2VySWQiOjEsImlhdCI6MTczMTg5NjUzOSwiZXhwIjoxNzMxODk4MzM5fQ.HWWvsomZJ6xRV6wJMDXsCc-IGAVoIQ3FWD3yKjrGwvI
-###
-
+Authorization: Bearer {{Token}}
+### 현재날씨 거울
+GET localhost:8080/mirror/weather/mirror/shortTerm
+mirrorCode: 100001c3322242920e
+### 대피소 검색
+GET localhost:8080/mirror/weather/shelter/인천
+### 대피소 회원
 GET localhost:8080/mirror/weather/shelter
-
-###
-
+Authorization: Bearer {{Token}}
+### 대피소 재난
 GET localhost:8080/mirror/weather/disasterMsg
-
+Authorization: Bearer {{Token}}
+### 지도 날씨 출력 회원
+GET localhost:8080/mirror/weather/weatherMapService
+Authorization: Bearer {{Token}}
+### 지도 날씨 거울
+GET localhost:8080/mirror/weather/weatherMapService/mirror
+mirrorCode: 100001c3322242920e
 ###
-
-GET localhost:8080/mirror/weather/earthQuake
-
-###
-
 GET localhost:8080/mirror/weather/typhoon
 
 ###
@@ -26,12 +31,5 @@ GET localhost:8080/mirror/weather/aws
 
 GET localhost:8080/mirror/weather/live
 
-###
-GET https://dapi.kakao.com/v2/local/search/address.json
-Authorization: KakaoAK 240fd966162140d476b7e85812519a6c
-
-###
-GET localhost:8080/mirror/weather/mirror/shortTerm
-mirrorCode: 100001c3322242920e
 ###
 GET localhost:8080/mirror/weather/weatherMapService
