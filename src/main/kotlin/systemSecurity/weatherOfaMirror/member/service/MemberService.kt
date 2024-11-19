@@ -51,10 +51,10 @@ class MemberService(
      */
     fun login(loginDto: LoginDto): TokenInfo {
         var member: Member = memberRepository.findByLoginId(loginDto.loginId)
-            ?: throw InvalidInputException(message = "아이디 혹은 비밀번호 오류")
+            ?: throw InvalidInputException(ResultCode.ERROR.name, "아이디 혹은 비밀번호 오류")
         var encoder = SCryptPasswordEncoder(16,8,1,32,64)
         if(!encoder.matches(loginDto.password,member.password)){
-            throw InvalidInputException(ResultCode.ERROR.toString(), message = "아이디 혹은 비밀번호 오류")
+            throw InvalidInputException(ResultCode.ERROR.name, message = "아이디 혹은 비밀번호 오류")
         }
         val authenticationToken = UsernamePasswordAuthenticationToken(loginDto.loginId, member.password)
         val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
