@@ -15,7 +15,8 @@ import java.time.LocalDateTime
 @Transactional
 class WeatherService(
     apikey: Apikey,
-    private val locationService: LocationService
+    private val locationService: LocationService,
+    private val coordinateService: CoordinateService
 ) {
     val shelterApikey: String = apikey.getShelterApikey()
     val disasterApikey: String = apikey.getDisasterApikey()
@@ -59,26 +60,37 @@ class WeatherService(
         return gson.fromJson(result, Map::class.java)
     }
 
-    fun shelter(/*shelterDto: ShelterDto*/): String? {
+    fun shelter(area: String): Map<*, *>? {
+        val coordinates = coordinateService.coordinatesFromAddress(area)?:throw InvalidInputException("지역","오류")
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://www.safetydata.go.kr")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build()
+        println(coordinates.first)
+        println(coordinates.second)
         val response = webClient
             .get()
             .uri {
                 it.path("/V2/api/DSSP-IF-10941")
                     .queryParam("serviceKey", shelterApikey)
+                    .queryParam("pageNo", 1)
+                    .queryParam("numOfRows", 30)
+                    .queryParam("returnType", "JSON")
+                    .queryParam("startLot", coordinates.first)
+                    .queryParam("startLat", coordinates.second)
+                    .queryParam("endLot", coordinates.first)
+                    .queryParam("endLat", coordinates.second)
                     .build()
             }
             .retrieve()
             .bodyToMono<String>()
-
-        return response.block()
+        val result = response.block()
+        val gson = Gson()
+        return gson.fromJson(result, Map::class.java)
     }
 
-    fun disasterMsg(/*shelterDto: ShelterDto*/): String? {
+    fun disasterMsg(area: String): String? {
         val localtime = LocalDateTime.now().toString()
         val splitTime = localtime.split("-")
         val now = splitTime[0] + splitTime[1] + splitTime[2].split("T")[0]
@@ -92,7 +104,12 @@ class WeatherService(
             .uri {
                 it.path("/V2/api/DSSP-IF-00247")
                     .queryParam("serviceKey", disasterApikey)
+                    .queryParam("returnType","JSON")
+                    .queryParam("pageNo", 1)
+                    .queryParam("numOfRows", 30)
+                    .queryParam("returnType", "JSON")
                     .queryParam("crtDt", now)
+                    .queryParam("rgnNm",area)
                     .build()
             }
             .retrieve()

@@ -49,6 +49,8 @@ dependencies {
 	implementation("org.springframework.security:spring-security-crypto")
 	implementation("org.bouncycastle:bcprov-jdk15on:1.70")
 	implementation("com.google.code.gson:gson:2.11.0")
+	implementation("org.jsoup:jsoup:1.15.3")
+	implementation("org.json:json:20231013")
 
 }
 

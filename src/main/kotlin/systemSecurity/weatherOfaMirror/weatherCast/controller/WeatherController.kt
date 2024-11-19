@@ -1,6 +1,5 @@
 package systemSecurity.weatherOfaMirror.weatherCast.controller
 
-import org.apache.coyote.BadRequestException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,6 +11,7 @@ import systemSecurity.weatherOfaMirror.core.dto.CustomUser
 import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 import systemSecurity.weatherOfaMirror.member.repository.MemberMirrorRepository
 import systemSecurity.weatherOfaMirror.member.repository.MemberRepository
+import systemSecurity.weatherOfaMirror.weatherCast.service.WeatherMapService
 import systemSecurity.weatherOfaMirror.weatherCast.service.WeatherService
 
 @RestController
@@ -19,7 +19,8 @@ import systemSecurity.weatherOfaMirror.weatherCast.service.WeatherService
 class WeatherController(
     private val weatherService: WeatherService,
     private val mirrorRepository: MemberMirrorRepository,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val weatherMapService: WeatherMapService
 ) {
     /**
      * 단기 예보 조회
@@ -42,15 +43,20 @@ class WeatherController(
         return weatherService.shortTerm(mirror.member.area.des)
     }
 
-    @GetMapping("/shelter")
-    fun shelter(/*@RequestBody shelterDto: ShelterDto*/):String?{
-        val result:String? = weatherService.shelter(/*shelterDto*/)
+    @GetMapping("/shelter/{area}")//대피소 정보
+    fun shelter(@PathVariable area: String): BaseResponse<Map<*,*>>?{
+        return BaseResponse(data = weatherService.shelter(area))
+    }
+
+    @GetMapping("/disasterMsg/{area}")//재난 문자
+    fun disasterMsg(@PathVariable area: String):String?{
+        val result:String? = weatherService.disasterMsg(area)
         return result
     }
 
-    @GetMapping("/disasterMsg")
-    fun disasterMsg(/*@RequestBody disasterMsgDto: DisasterMsgDto*/):String?{
-        val result:String? = weatherService.disasterMsg(/*DisasterMsgDto*/)
+    @GetMapping("/weatherMapService")//지도 날씨 출력
+    fun weatherMapService():String?{
+        val result:String = weatherMapService.weatherMapService()
         return result
     }
 
@@ -77,4 +83,5 @@ class WeatherController(
         val result:String? = weatherService.live(/*LiveDto*/)
         return result
     }
+
 }

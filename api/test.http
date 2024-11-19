@@ -1,5 +1,4 @@
 GET localhost:8080/mirror/weather/shortTerm/인천
-
 ###
 GET localhost:8080/mirror/weather/shortTerm
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYXJibzk1MTAiLCJhdXRoIjoiUk9MRV9NRU1CRVIiLCJ1c2VySWQiOjEsImlhdCI6MTczMTg5NjUzOSwiZXhwIjoxNzMxODk4MzM5fQ.HWWvsomZJ6xRV6wJMDXsCc-IGAVoIQ3FWD3yKjrGwvI
@@ -34,3 +33,5 @@ Authorization: KakaoAK 240fd966162140d476b7e85812519a6c
 ###
 GET localhost:8080/mirror/weather/mirror/shortTerm
 mirrorCode: 100001c3322242920e
+###
+GET localhost:8080/mirror/weather/weatherMapService
