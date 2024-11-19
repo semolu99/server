@@ -49,10 +49,7 @@ class LocationService(
             xPoint = firstDocument.x
             yPoint = firstDocument.y
 
-            val mapXY=lambertProjection.convertToGrid(LambertProjection.Coordinates(xPoint, yPoint))
-            println(mapXY.toString())
-
-            return mapXY
+            return lambertProjection.convertToGrid(LambertProjection.Coordinates(xPoint, yPoint))
         }
 
         return null
