@@ -1,5 +1,5 @@
 ### 현재날씨 검색
-GET localhost:8080/mirror/weather/shortTerm/인천
+GET localhost:8080/mirror/weather/shortTerm/강원도
 ### 현재날씨 회원
 GET localhost:8080/mirror/weather/shortTerm
 Authorization: Bearer {{Token}}
