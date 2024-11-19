@@ -78,15 +78,17 @@ class WeatherService(
                     .queryParam("numOfRows", 30)
                     .queryParam("returnType", "JSON")
                     .queryParam("startLot", coordinates.first)
-                    .queryParam("startLat", coordinates.second)
+                    .queryParam("startLat", coordinates.second + 0.1)
                     .queryParam("endLot", coordinates.first)
-                    .queryParam("endLat", coordinates.second)
+                    .queryParam("endLat", coordinates.second + 0.01)
                     .build()
             }
             .retrieve()
             .bodyToMono<String>()
         val result = response.block()
         val gson = Gson()
+        println(coordinates.first + 0.1)
+        println(coordinates.second+0.01)
         return gson.fromJson(result, Map::class.java)
     }
 
@@ -107,7 +109,6 @@ class WeatherService(
                     .queryParam("returnType","JSON")
                     .queryParam("pageNo", 1)
                     .queryParam("numOfRows", 30)
-                    .queryParam("returnType", "JSON")
                     .queryParam("crtDt", now)
                     .queryParam("rgnNm",area)
                     .build()
@@ -116,6 +117,8 @@ class WeatherService(
             .bodyToMono<String>()
         val result = response.block()
         val gson = Gson()
+        println(area)
+        println(now)
         return gson.fromJson(result, Map::class.java)
     }
 
