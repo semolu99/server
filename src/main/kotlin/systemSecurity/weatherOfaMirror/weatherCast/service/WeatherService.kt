@@ -1,5 +1,6 @@
 package systemSecurity.weatherOfaMirror.weatherCast.service
 
+
 import com.google.gson.Gson
 import jakarta.transaction.Transactional
 import org.springframework.http.HttpHeaders
@@ -62,6 +63,10 @@ class WeatherService(
 
     fun shelter(area: String): Map<*, *>? {
         val coordinates = coordinateService.coordinatesFromAddress(area)?:throw InvalidInputException("지역","오류")
+        val startLot = String.format("%.6f", coordinates.first - 0.1)
+        val startLat = String.format("%.6f", coordinates.second - 0.1)
+        val endLot = String.format("%.6f", coordinates.first + 0.1)
+        val endLat = String.format("%.6f", coordinates.second + 0.1)
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://www.safetydata.go.kr")
@@ -77,10 +82,10 @@ class WeatherService(
                     .queryParam("pageNo", 1)
                     .queryParam("numOfRows", 30)
                     .queryParam("returnType", "JSON")
-                    .queryParam("startLot", coordinates.first)
-                    .queryParam("startLat", coordinates.second + 0.1)
-                    .queryParam("endLot", coordinates.first)
-                    .queryParam("endLat", coordinates.second + 0.01)
+                    .queryParam("startLot", startLot)
+                    .queryParam("startLat", startLat)
+                    .queryParam("endLot", endLot)
+                    .queryParam("endLat", endLat)
                     .build()
             }
             .retrieve()
@@ -88,7 +93,7 @@ class WeatherService(
         val result = response.block()
         val gson = Gson()
         println(coordinates.first + 0.1)
-        println(coordinates.second+0.01)
+        println(coordinates.second+0.1)
         return gson.fromJson(result, Map::class.java)
     }
 
