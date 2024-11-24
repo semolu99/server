@@ -32,8 +32,7 @@ class WeatherService(
         val now = splitTime[0] + splitTime[1] + day[0]
         val nowTime = time[0] + time[1]
         val coordinates = locationService.fetchCoordinatesFromAddress(area)?:throw InvalidInputException("지역","오류")
-        println(coordinates.x.toInt())
-        println(coordinates.y.toInt())
+
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://apihub.kma.go.kr")
@@ -67,35 +66,33 @@ class WeatherService(
             .baseUrl("https://www.safetydata.go.kr")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build()
-        println(coordinates.first)
-        println(coordinates.second)
+
         val response = webClient
             .get()
             .uri {
                 it.path("/V2/api/DSSP-IF-10941")
                     .queryParam("serviceKey", shelterApikey)
-                    .queryParam("pageNo", 1)
                     .queryParam("numOfRows", 30)
+                    .queryParam("pageNo", 1)
                     .queryParam("returnType", "JSON")
-                    .queryParam("startLot", coordinates.first)
+                    .queryParam("startLot", coordinates.first+0.1)
+                    .queryParam("endLot", coordinates.first-0.1)
                     .queryParam("startLat", coordinates.second + 0.1)
-                    .queryParam("endLot", coordinates.first)
-                    .queryParam("endLat", coordinates.second + 0.01)
+                    .queryParam("endLat", coordinates.second - 0.1)
                     .build()
             }
             .retrieve()
             .bodyToMono<String>()
         val result = response.block()
         val gson = Gson()
-        println(coordinates.first + 0.1)
-        println(coordinates.second+0.01)
+
         return gson.fromJson(result, Map::class.java)
     }
 
     fun disasterMsg(area: String): Map<*,*>? {
         val localtime = LocalDateTime.now().toString()
         val splitTime = localtime.split("-")
-        val now = splitTime[0] + splitTime[1] + splitTime[2].split("T")[0]
+        val now = splitTime[0] + splitTime[1] + "01"
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://www.safetydata.go.kr")
@@ -117,8 +114,7 @@ class WeatherService(
             .bodyToMono<String>()
         val result = response.block()
         val gson = Gson()
-        println(area)
-        println(now)
+
         return gson.fromJson(result, Map::class.java)
     }
 

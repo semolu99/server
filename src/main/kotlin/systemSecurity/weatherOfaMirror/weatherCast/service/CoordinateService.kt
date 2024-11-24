@@ -40,7 +40,7 @@ class CoordinateService(
         response?.let {
             val kakaoResponse: KakaoAddressResponse = objectMapper.readValue(it)
             val firstDocument = kakaoResponse.documents.firstOrNull()
-                ?: throw InvalidInputException()
+                ?: throw InvalidInputException("ERROR","지역 없음")
             return Pair(firstDocument.x, firstDocument.y)
         }
         return null

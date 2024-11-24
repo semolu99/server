@@ -1,5 +1,5 @@
 ### 현재날씨 검색
-GET localhost:8080/mirror/weather/shortTerm/강원도
+GET localhost:8080/mirror/weather/shortTerm/인천광역시서구
 ### 현재날씨 회원
 GET localhost:8080/mirror/weather/shortTerm
 Authorization: Bearer {{Token}}
@@ -7,11 +7,11 @@ Authorization: Bearer {{Token}}
 GET localhost:8080/mirror/weather/mirror/shortTerm
 mirrorCode: 100001c3322242920e
 ### 대피소 검색
-GET localhost:8080/mirror/weather/shelter/인천
+GET localhost:8080/mirror/weather/shelter/인천서구심곡동
 ### 대피소 회원
 GET localhost:8080/mirror/weather/shelter
 Authorization: Bearer {{Token}}
-### 대피소 재난
+### 재난 문자
 GET localhost:8080/mirror/weather/disasterMsg
 Authorization: Bearer {{Token}}
 ### 지도 날씨 출력 회원
