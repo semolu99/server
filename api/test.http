@@ -20,6 +20,10 @@ Authorization: Bearer {{Token}}
 ### 지도 날씨 거울
 GET localhost:8080/mirror/weather/weatherMapService/mirror
 mirrorCode: 100001c3322242920e
+
+###
+GET localhost:8080/mirror/weather/weekWeather
+
 ###
 GET localhost:8080/mirror/weather/typhoon
 

@@ -75,6 +75,14 @@ class WeatherController(
         return BaseResponse(data = weatherMapService.weatherMapService())
     }
 
+    /** 이거 일주일 날씨 만들어볼려고 만들어둔거 일단 신경쓰지마
+    /*@GetMapping("/weekWeather")
+    fun weekWeather():String?{
+        val result:String? = weatherService.weekWeather()
+        return result
+    }*/
+    **/
+
     @GetMapping("/earthQuake")
     fun earthQuake(/*@RequestBody earthQuakeDto: EarthQuakeDto*/):String?{
         val result:String? = weatherService.earthQuake(/*EarthQuakeDto*/)
