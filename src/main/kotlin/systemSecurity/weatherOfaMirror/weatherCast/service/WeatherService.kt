@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import systemSecurity.weatherOfaMirror.core.annotation.Apikey
 import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 @Transactional
@@ -120,6 +121,102 @@ class WeatherService(
         val gson = Gson()
 
         return gson.fromJson(result, Map::class.java)
+    }
+
+    fun weekWeather(): String? {
+        val now = LocalDateTime.now()
+        val forecastTime = when {
+            now.hour < 6 -> now.plusDays(3).withHour(18).withMinute(0).withSecond(0).withNano(0)
+            now.hour < 18 -> now.plusDays(3).withHour(6).withMinute(0).withSecond(0).withNano(0)
+            else -> now.plusDays(3).withHour(18).withMinute(0).withSecond(0).withNano(0)
+        }
+
+        val forecastEndDate = now.toLocalDate().plusDays(7)
+
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
+        val tmfc = forecastTime.minusDays(3)
+        val tmfc1 = forecastTime.format(formatter)
+        val tmfc2 = forecastEndDate.atTime(0, 0).format(formatter)
+
+        val webClient: WebClient = WebClient
+            .builder()
+            .baseUrl("https://apihub.kma.go.kr")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build()
+        val response = webClient
+            .get()
+            .uri {
+                it.path("api/typ01/url/fct_afs_wl.php")
+                    .queryParam("authKey", whetherApikey)
+                    .queryParam("reg", "11D20000")
+                    //.queryParam("tmfc", 0)
+                    //.queryParam("tmfc1", tmfc1)
+                    .queryParam("tmfc2", tmfc2)
+                    .queryParam("disp", 0)
+                    .build()
+            }
+
+            .retrieve()
+            .bodyToMono<String>()
+        println(tmfc1)
+        println(tmfc2)
+        return response.block()
+    }
+
+    fun threeWeather(): String? {
+        val now = LocalDateTime.now()
+        val forecastTime = when {
+            now.hour < 6 -> now.withHour(18).withMinute(0).withSecond(0).withNano(0)
+            now.hour < 18 -> now.withHour(6).withMinute(0).withSecond(0).withNano(0)
+            else -> now.plusDays(3).withHour(18).withMinute(0).withSecond(0).withNano(0)
+        }
+
+        val forecastEndDate = now.toLocalDate().plusDays(3)
+
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
+        val tmfc1 = forecastTime.format(formatter)
+        val tmfc2 = forecastEndDate.atTime(0, 0).format(formatter)
+
+        val webClient: WebClient = WebClient
+            .builder()
+            .baseUrl("https://apihub.kma.go.kr")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build()
+        val response = webClient
+            .get()
+            .uri {
+                it.path("api/typ01/url/fct_afs_dl.php")
+                    .queryParam("authKey", whetherApikey)
+                    .queryParam("reg", "11B10101")
+                    .queryParam("tmfc1", tmfc1)
+                    .queryParam("tmfc2", tmfc2)
+                    .queryParam("disp", 1)
+                    .build()
+            }
+
+            .retrieve()
+            .bodyToMono<String>()
+        println(tmfc1)
+        println(tmfc2)
+        return response.block()
+    }
+
+    fun specialReport(): String? {
+        val webClient: WebClient = WebClient
+            .builder()
+            .baseUrl("https://apihub.kma.go.kr")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build()
+        val response = webClient
+            .get()
+            .uri {
+                it.path("api/typ01/url/wrn_now_data.php")
+                    .queryParam("authKey", whetherApikey)
+                    .build()
+            }
+            .retrieve()
+            .bodyToMono<String>()
+        return response.block()
     }
 
     fun earthQuake(/*earthQuakeDto: EarthQuakeDto*/): String? {
