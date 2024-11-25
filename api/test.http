@@ -25,6 +25,12 @@ mirrorCode: 100001c3322242920e
 GET localhost:8080/mirror/weather/weekWeather
 
 ###
+GET localhost:8080/mirror/weather/threeWeather
+
+###
+GET localhost:8080/mirror/weather/specialReport
+
+###
 GET localhost:8080/mirror/weather/typhoon
 
 ###
