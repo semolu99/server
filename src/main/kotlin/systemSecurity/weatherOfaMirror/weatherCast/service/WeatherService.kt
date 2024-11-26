@@ -5,11 +5,16 @@ import jakarta.transaction.Transactional
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import systemSecurity.weatherOfaMirror.core.annotation.Apikey
 import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
+import systemSecurity.weatherOfaMirror.core.global.CoordinateService
+import systemSecurity.weatherOfaMirror.core.global.LocationService
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Service
@@ -19,11 +24,12 @@ class WeatherService(
     private val locationService: LocationService,
     private val coordinateService: CoordinateService
 ) {
-    val shelterApikey: String = apikey.getShelterApikey()
-    val disasterApikey: String = apikey.getDisasterApikey()
-    val whetherApikey: String = apikey.getWhetherApikey()
-    val LiveApikey: String = apikey.getLiveApikey()
-    val AWSApikey: String = apikey.getAWSApikey()
+    private val dustApikey = apikey.dustApiKey
+    private val shelterApikey: String = apikey.shelterApiKey
+    private val disasterApikey: String = apikey.disasterApiKey
+    private val whetherApikey: String = apikey.whetherApiKey
+    private val LiveApikey: String = apikey.liveApiKey
+    private val AWSApikey: String = apikey.aWSApiKey
 
     fun shortTerm(area: String): Map<*, *>? {
         val localtime = LocalDateTime.now().toString()
@@ -158,8 +164,7 @@ class WeatherService(
 
             .retrieve()
             .bodyToMono<String>()
-        println(tmfc1)
-        println(tmfc2)
+
         return response.block()
     }
 
@@ -196,8 +201,7 @@ class WeatherService(
 
             .retrieve()
             .bodyToMono<String>()
-        println(tmfc1)
-        println(tmfc2)
+
         return response.block()
     }
 
@@ -218,8 +222,71 @@ class WeatherService(
             .bodyToMono<String>()
         return response.block()
     }
+    /**
+     * 미세 먼지 전국 및 지역별 정보
+     */
+    fun dustInfo(area:String): Map<*,*>?{
+        val webClient: WebClient = WebClient
+            .builder()
+            .baseUrl("http://apis.data.go.kr")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer ->
+                        configurer.defaultCodecs()
+                            .maxInMemorySize(-1)
+                    }.build()
+            )
+            .build()
+        val response = webClient
+            .get()
+            .uri{
+                it.path("B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty")
+                    .queryParam("serviceKey", dustApikey)
+                    .queryParam("returnType","json")
+                    .queryParam("ver","1.5")
+                    .queryParam("sidoName",area)
+                    .queryParam("numOfRows","800")
+                    .build()
+            }
+            .retrieve()
+            .bodyToMono<String>()
+        val result = response.block()
+        val gson = Gson()
+        return gson.fromJson(result, Map::class.java)
+    }
 
-    fun earthQuake(/*earthQuakeDto: EarthQuakeDto*/): String? {
+    fun minuDust():Map<*,*>{
+        val tempNow = LocalDate.now()  // 현재 날짜만 가져옵니다.
+
+        val forecastDate = when {
+            LocalTime.now().hour < 18 -> tempNow.minusDays(2)  // 전날 날짜
+            else -> tempNow  // 오늘 날짜
+        }
+
+        val webClient: WebClient = WebClient
+            .builder()
+            .baseUrl("http://apis.data.go.kr")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build()
+
+        val response = webClient
+            .get()
+            .uri{
+                it.path("B552584/ArpltnInforInqireSvc/getMinuDustWeekFrcstDspth")
+                    .queryParam("serviceKey", dustApikey)
+                    .queryParam("returnType","json")
+                    .queryParam("numOfRows","800")
+                    .queryParam("searchDate", forecastDate)
+                    .build()
+            }
+            .retrieve()
+            .bodyToMono<String>()
+        val gson = Gson()
+        return gson.fromJson(response.block(), Map::class.java)
+     }
+
+    /*fun earthQuake(/*earthQuakeDto: EarthQuakeDto*/): String? {
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://apihub.kma.go.kr")
@@ -289,5 +356,5 @@ class WeatherService(
             .retrieve()
             .bodyToMono<String>()
         return response.block()
-    }
+    }*/
 }

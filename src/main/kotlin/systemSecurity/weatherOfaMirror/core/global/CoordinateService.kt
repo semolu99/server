@@ -1,4 +1,4 @@
-package systemSecurity.weatherOfaMirror.weatherCast.service
+package systemSecurity.weatherOfaMirror.core.global
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -17,7 +17,7 @@ import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 class CoordinateService(
     apikey: Apikey
 ) {
-    private val coordinateApiKey: String = apikey.getKakaoApiKey()
+    private val coordinateApiKey: String = apikey.coordinateApiKey
     private val objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()
 
     fun coordinatesFromAddress(area: String): Pair<Double, Double>? {

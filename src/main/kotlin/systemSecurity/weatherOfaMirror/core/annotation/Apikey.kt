@@ -6,45 +6,23 @@ import org.springframework.stereotype.Component
 @Component
 class Apikey {
     @Value("\${apiKey.ShelterApiKey}")
-    lateinit var ShelterApiKey: String
+    lateinit var shelterApiKey: String
 
     @Value("\${apiKey.DisasterApiKey}")
-    lateinit var DisasterApiKey: String
+    lateinit var disasterApiKey: String
 
     @Value("\${apiKey.WhetherApiKey}")
-    lateinit var WhetherApiKey: String
+    lateinit var whetherApiKey: String
 
     @Value("\${apiKey.AWSApiKey}")
-    lateinit var AWSApiKey: String
+    lateinit var aWSApiKey: String
 
     @Value("\${apiKey.LiveApiKey}")
-    lateinit var LiveApiKey: String
+    lateinit var liveApiKey: String
 
     @Value("\${apiKey.KakaoApiKey}")
-    lateinit var CoordinateApiKey: String
+    lateinit var coordinateApiKey: String
 
-    fun getShelterApikey(): String {
-        return ShelterApiKey
-    }
-
-    fun getDisasterApikey(): String {
-        return DisasterApiKey
-    }
-
-    fun getWhetherApikey(): String {
-        return WhetherApiKey
-    }
-
-    fun getAWSApikey(): String {
-        return AWSApiKey
-    }
-
-    fun getLiveApikey(): String {
-        return LiveApiKey
-    }
-
-    fun getKakaoApiKey(): String {
-        return CoordinateApiKey
-    }
-
+    @Value("\${apiKey.DustApiKey}")
+    lateinit var dustApiKey:String
 }

@@ -1,10 +1,9 @@
-package systemSecurity.weatherOfaMirror.weatherCast.service
+package systemSecurity.weatherOfaMirror.core.global
 
 import com.google.gson.Gson
 import jakarta.transaction.Transactional
 import org.jsoup.Jsoup
 import org.jsoup.Connection
-import org.json.JSONObject
 import org.springframework.stereotype.Service
 
 @Service

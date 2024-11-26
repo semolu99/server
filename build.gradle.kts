@@ -51,6 +51,7 @@ dependencies {
 	implementation("com.google.code.gson:gson:2.11.0")
 	implementation("org.jsoup:jsoup:1.15.3")
 	implementation("org.json:json:20231013")
+	implementation("com.fasterxml.jackson.core:jackson-databind")
 
 }
 

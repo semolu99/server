@@ -7,7 +7,7 @@ Content-Type: application/json
   "password":"test1234!",
   "name":"테스트",
   "email": "test1234@test.test",
-  "area": "JEJU"
+  "area": "INCH"
 }
 
 ###로그인

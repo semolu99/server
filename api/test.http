@@ -20,6 +20,15 @@ Authorization: Bearer {{Token}}
 ### 지도 날씨 거울
 GET localhost:8080/mirror/weather/weatherMapService/mirror
 mirrorCode: 100001c3322242920e
+### 미세 먼지
+GET localhost:8080/mirror/weather/dust
+### 미세 먼지 회원
+GET localhost:8080/mirror/weather/dust/member
+Authorization: Bearer {{Token}}
+### 미세 먼지 거울
+GET localhost:8080/mirror/weather/dust/mirror
+### 미세 먼지 예보
+GET localhost:8080/mirror/weather/nation/dust
 
 ###
 GET localhost:8080/mirror/weather/weekWeather

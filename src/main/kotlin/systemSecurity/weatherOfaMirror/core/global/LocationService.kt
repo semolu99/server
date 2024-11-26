@@ -1,4 +1,4 @@
-package systemSecurity.weatherOfaMirror.weatherCast.service
+package systemSecurity.weatherOfaMirror.core.global
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -12,7 +12,6 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import systemSecurity.weatherOfaMirror.core.annotation.Apikey
 import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
-import systemSecurity.weatherOfaMirror.core.global.LambertProjection
 import systemSecurity.weatherOfaMirror.core.global.LambertProjection.GridCoordinates
 
 @Service
@@ -21,7 +20,7 @@ class LocationService(
     apikey: Apikey,
     private val lambertProjection: LambertProjection
 ){
-    val CoordinateApiKey: String = apikey.getKakaoApiKey()
+    val CoordinateApiKey: String = apikey.coordinateApiKey
     private val objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()
 
     fun fetchCoordinatesFromAddress(area: String): GridCoordinates? {

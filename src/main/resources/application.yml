@@ -22,6 +22,8 @@ spring:
         show_sql: false
         highlight_sql: true
       open-in-view: true
+  codec:
+    max-in-memory-size: 100MB
 logging:
   pattern:
     console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
@@ -41,3 +43,4 @@ apiKey:
   AWSApiKey: "2I95H7GWQAI805B6"
   LiveApiKey: "A375OG91TR532842"
   KakaoApiKey: "240fd966162140d476b7e85812519a6c"
+  DustApiKey: "EfNPnKNz7vo/rEcb3TCIfqUHRhup8RuhXrVoMIRZ9leUV7gB1vCznJywOfQqSF23AceU6tU3txul3jQGcz38ZA=="
