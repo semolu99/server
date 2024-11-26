@@ -154,6 +154,15 @@ class WeatherController(
         return BaseResponse(data = weatherService.pointShelter(pointShelterDtoRequest))
     }
 
+    /**
+     * 특보
+     */
+    @GetMapping("/specialReport")
+    fun specialReport():String? {
+        val result: String? = weatherService.specialReport()
+        return result
+    }
+
     /*@GetMapping("/earthQuake")
     fun earthQuake(/*@RequestBody earthQuakeDto: EarthQuakeDto*/):String?{
         val result:String? = weatherService.earthQuake(/*EarthQuakeDto*/)

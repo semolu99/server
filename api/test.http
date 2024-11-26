@@ -35,6 +35,11 @@ Authorization: Bearer {{Token}}
 ### 일주일 날씨 거울
 GET localhost:8080/mirror/weather/weekWeather/mirror
 mirrorCode: 100001c3322242920e
+### 거울 단기 조회
+GET localhost:8080/mirror/weather/mirror/shortTerm/point
+mirrorCode: 100001c3322242920e
+### 특보
+GET localhost:8080/mirror/weather/specialReport
 ###
 GET localhost:8080/mirror/weather/typhoon
 

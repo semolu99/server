@@ -47,7 +47,6 @@ class LocationService(
                 ?: throw InvalidInputException()
             xPoint = firstDocument.x
             yPoint = firstDocument.y
-
             return lambertProjection.convertToGrid(LambertProjection.Coordinates(xPoint, yPoint))
         }
 

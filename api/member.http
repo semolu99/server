@@ -33,11 +33,13 @@ Authorization: Bearer {{Token}}
 
 {
   "mirrorCode": "100001c3322242920e",
-  "mirrorName" : "테스트의 거울"
+  "mirrorName" : "테스트의 거울",
+  "xPoint" : "126.705258070068",
+  "yPoint" : "37.4560044656444"
 }
 
 ###거울 삭제
-DELETE localhost:8080/mirror/member/mirror/{mirrorId}
+DELETE localhost:8080/mirror/member/mirror/1
 Authorization: Bearer {{Token}}
 
 

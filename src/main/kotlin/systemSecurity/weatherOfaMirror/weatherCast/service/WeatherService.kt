@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import systemSecurity.weatherOfaMirror.core.annotation.Apikey
 import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 import systemSecurity.weatherOfaMirror.core.global.CoordinateService
+import systemSecurity.weatherOfaMirror.core.global.LambertProjection
 import systemSecurity.weatherOfaMirror.core.global.LocationService
 import systemSecurity.weatherOfaMirror.member.entity.Mirror
 import systemSecurity.weatherOfaMirror.weatherCast.dto.PointShelterDtoRequest
@@ -23,7 +24,8 @@ import java.time.LocalTime
 class WeatherService(
     apikey: Apikey,
     private val locationService: LocationService,
-    private val coordinateService: CoordinateService
+    private val coordinateService: CoordinateService,
+    private val lambertProjection: LambertProjection,
 ) {
     private val dustApikey = apikey.dustApiKey
     private val shelterApikey: String = apikey.shelterApiKey
@@ -77,7 +79,7 @@ class WeatherService(
         val time = day[1].split(":")
         val now = splitTime[0] + splitTime[1] + day[0]
         val nowTime = time[0] + time[1]
-
+        val pointer = lambertProjection.convertToGrid(LambertProjection.Coordinates(mirror.xPoint, mirror.yPoint))
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://apihub.kma.go.kr")
@@ -93,8 +95,8 @@ class WeatherService(
                     .queryParam("dataType", "JSON")
                     .queryParam("base_date", now)
                     .queryParam("base_time", nowTime)
-                    .queryParam("nx", mirror.xPoint.toInt())
-                    .queryParam("ny", mirror.yPoint.toInt())
+                    .queryParam("nx", pointer.x.toInt())
+                    .queryParam("ny", pointer.y.toInt())
                     .build()
             }
             .retrieve()
@@ -291,6 +293,27 @@ class WeatherService(
         val gson = Gson()
 
         return gson.fromJson(result, Map::class.java)
+    }
+
+    /**
+     * 특보
+     */
+    fun specialReport(): String? {
+        val webClient: WebClient = WebClient
+            .builder()
+            .baseUrl("https://apihub.kma.go.kr")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build()
+        val response = webClient
+            .get()
+            .uri {
+                it.path("api/typ01/url/wrn_now_data.php")
+                    .queryParam("authKey", whetherApikey)
+                    .build()
+            }
+            .retrieve()
+            .bodyToMono<String>()
+        return response.block()
     }
 
 
