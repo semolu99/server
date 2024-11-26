@@ -12,6 +12,8 @@ import systemSecurity.weatherOfaMirror.core.annotation.Apikey
 import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 import systemSecurity.weatherOfaMirror.core.global.CoordinateService
 import systemSecurity.weatherOfaMirror.core.global.LocationService
+import systemSecurity.weatherOfaMirror.member.entity.Mirror
+import systemSecurity.weatherOfaMirror.weatherCast.dto.PointShelterDtoRequest
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -56,6 +58,43 @@ class WeatherService(
                     .queryParam("base_time", nowTime)
                     .queryParam("nx", coordinates.x.toInt())
                     .queryParam("ny", coordinates.y.toInt())
+                    .build()
+            }
+            .retrieve()
+            .bodyToMono<String>()
+        val result = response.block()
+        val gson = Gson()
+        return gson.fromJson(result, Map::class.java)
+    }
+
+    /**
+     * 좌표 (거울) 단기 조회
+     */
+    fun mirrorShortTerm(mirror: Mirror): Map<*, *>? {
+        val localtime = LocalDateTime.now().toString()
+        val splitTime = localtime.split("-")
+        val day = splitTime[2].split("T")
+        val time = day[1].split(":")
+        val now = splitTime[0] + splitTime[1] + day[0]
+        val nowTime = time[0] + time[1]
+
+        val webClient: WebClient = WebClient
+            .builder()
+            .baseUrl("https://apihub.kma.go.kr")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build()
+        val response = webClient
+            .get()
+            .uri {
+                it.path("api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtNcst")
+                    .queryParam("authKey", whetherApikey)
+                    .queryParam("pageNo", 1)
+                    .queryParam("numOfRows", 1000)
+                    .queryParam("dataType", "JSON")
+                    .queryParam("base_date", now)
+                    .queryParam("base_time", nowTime)
+                    .queryParam("nx", mirror.xPoint.toInt())
+                    .queryParam("ny", mirror.yPoint.toInt())
                     .build()
             }
             .retrieve()
@@ -131,9 +170,6 @@ class WeatherService(
     fun weekWeather(area: String): Map<*, *>? {
         val coordinates = coordinateService.coordinatesFromAddress(area)?:throw InvalidInputException("지역","오류")
 
-        println(coordinates.first)
-        println(coordinates.second)
-
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://api.open-meteo.com/v1/forecast")
@@ -161,7 +197,7 @@ class WeatherService(
     fun dustInfo(area:String): Map<*,*>?{
         val webClient: WebClient = WebClient
             .builder()
-            .baseUrl("http://apis.data.go.kr")
+            .baseUrl("https://apis.data.go.kr")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .exchangeStrategies(
                 ExchangeStrategies.builder()
@@ -189,27 +225,30 @@ class WeatherService(
         return gson.fromJson(result, Map::class.java)
     }
 
+    /**
+     * 오늘부터 모래까지 예보
+     */
     fun minuDust():Map<*,*>{
         val tempNow = LocalDate.now()  // 현재 날짜만 가져옵니다.
 
         val forecastDate = when {
-            LocalTime.now().hour < 18 -> tempNow.minusDays(2)  // 전날 날짜
+            LocalTime.now().hour < 5 -> tempNow.minusDays(1)  // 전날 날짜
             else -> tempNow  // 오늘 날짜
         }
 
         val webClient: WebClient = WebClient
             .builder()
-            .baseUrl("http://apis.data.go.kr")
+            .baseUrl("https://apis.data.go.kr")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build()
 
         val response = webClient
             .get()
             .uri{
-                it.path("B552584/ArpltnInforInqireSvc/getMinuDustWeekFrcstDspth")
+                it.path("B552584/ArpltnInforInqireSvc/getMinuDustFrcstDspth")
                     .queryParam("serviceKey", dustApikey)
                     .queryParam("returnType","json")
-                    .queryParam("numOfRows","800")
+                    .queryParam("numOfRows","100")
                     .queryParam("searchDate", forecastDate)
                     .build()
             }
@@ -218,6 +257,42 @@ class WeatherService(
         val gson = Gson()
         return gson.fromJson(response.block(), Map::class.java)
      }
+    /**
+     * 좌표로 대피소 조회
+     */
+    fun pointShelter(pointShelterDtoRequest: PointShelterDtoRequest): Map<*, *>? {
+        val startLot = String.format("%.6f", pointShelterDtoRequest.xPoint - 0.05)
+        val startLat = String.format("%.6f", pointShelterDtoRequest.yPoint - 0.05)
+        val endLot = String.format("%.6f", pointShelterDtoRequest.xPoint + 0.05)
+        val endLat = String.format("%.6f", pointShelterDtoRequest.yPoint + 0.05)
+        val webClient: WebClient = WebClient
+            .builder()
+            .baseUrl("https://www.safetydata.go.kr")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build()
+
+        val response = webClient
+            .get()
+            .uri {
+                it.path("/V2/api/DSSP-IF-10941")
+                    .queryParam("serviceKey", shelterApikey)
+                    .queryParam("pageNo", 1)
+                    .queryParam("numOfRows", 30)
+                    .queryParam("returnType", "JSON")
+                    .queryParam("startLot", startLot)
+                    .queryParam("startLat", startLat)
+                    .queryParam("endLot", endLot)
+                    .queryParam("endLat", endLat)
+                    .build()
+            }
+            .retrieve()
+            .bodyToMono<String>()
+        val result = response.block()
+        val gson = Gson()
+
+        return gson.fromJson(result, Map::class.java)
+    }
+
 
     /*fun earthQuake(/*earthQuakeDto: EarthQuakeDto*/): String? {
         val webClient: WebClient = WebClient

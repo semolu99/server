@@ -27,7 +27,7 @@ GET localhost:8080/mirror/weather/dust/member
 Authorization: Bearer {{Token}}
 ### 미세 먼지 거울
 GET localhost:8080/mirror/weather/dust/mirror
-### 미세 먼지 예보
+### 전국 미세 먼지 예보
 GET localhost:8080/mirror/weather/nation/dust
 ### 일주일 날씨 회원
 GET localhost:8080/mirror/weather/weekWeather/member

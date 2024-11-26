@@ -95,12 +95,27 @@ data class MemberMirrorDtoRequest(
     @field:NotBlank
     @JsonProperty("mirrorName")
     private val _mirrorName: String?,
+
+    @field:NotBlank
+    @JsonProperty("xPoint")
+    private val _xPoint: String?,
+
+    @field:NotBlank
+    @JsonProperty("yPoint")
+    private val _yPoint: String?,
+
 ){
     val mirrorCode : String
         get() = _mirrorCode!!
 
     val mirrorName :String
         get() = _mirrorName!!
+
+    val xPoint : Double
+        get() = _xPoint!!.toDouble()
+
+    val yPoint : Double
+        get() = _yPoint!!.toDouble()
 }
 
 data class MemberMirrorDtoResponse(

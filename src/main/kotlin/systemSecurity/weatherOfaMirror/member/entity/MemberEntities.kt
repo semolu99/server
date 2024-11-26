@@ -6,6 +6,7 @@ import systemSecurity.weatherOfaMirror.core.status.Area
 import systemSecurity.weatherOfaMirror.core.status.ROLE
 import systemSecurity.weatherOfaMirror.member.dto.MemberDtoResponse
 import systemSecurity.weatherOfaMirror.member.dto.MemberMirrorDtoResponse
+import java.time.Duration
 
 @Entity
 @Table(
@@ -67,6 +68,12 @@ class Mirror(
 
     @Column(nullable = false, length = 20)
     val mirrorName :String,
+
+    @Column(nullable = true, length = 30)
+    val xPoint : Double,
+
+    @Column(nullable = true, length = 30)
+    val yPoint : Double,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = ForeignKey(name = "fk_mirror_member_id"))

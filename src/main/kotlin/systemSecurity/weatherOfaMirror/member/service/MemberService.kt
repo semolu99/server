@@ -76,7 +76,7 @@ class MemberService(
             ?:throw InvalidInputException("ERROR",message = "잘못된 회원 번호")
         var mirror : Mirror? = mirrorRepository.findByMirrorCode(mirrorDtoRequest.mirrorCode)
         if(mirror != null) throw InvalidInputException("ERROR",message = "이미 등록된 거울입니다.")
-        mirror = Mirror(null, mirrorDtoRequest.mirrorCode, mirrorDtoRequest.mirrorName ,member)
+        mirror = Mirror(null, mirrorDtoRequest.mirrorCode, mirrorDtoRequest.mirrorName ,mirrorDtoRequest.xPoint,mirrorDtoRequest.yPoint,member)
         mirrorRepository.save(mirror)
         return "등록 완료"
     }

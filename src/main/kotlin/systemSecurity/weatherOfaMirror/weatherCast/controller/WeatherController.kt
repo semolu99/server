@@ -1,5 +1,6 @@
 package systemSecurity.weatherOfaMirror.weatherCast.controller
 
+import jakarta.validation.Valid
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import systemSecurity.weatherOfaMirror.core.dto.BaseResponse
@@ -8,6 +9,7 @@ import systemSecurity.weatherOfaMirror.core.exception.InvalidInputException
 import systemSecurity.weatherOfaMirror.core.global.WeatherMapService
 import systemSecurity.weatherOfaMirror.member.repository.MemberMirrorRepository
 import systemSecurity.weatherOfaMirror.member.repository.MemberRepository
+import systemSecurity.weatherOfaMirror.weatherCast.dto.PointShelterDtoRequest
 import systemSecurity.weatherOfaMirror.weatherCast.service.WeatherService
 
 @RestController
@@ -38,6 +40,16 @@ class WeatherController(
         val mirror = mirrorRepository.findByMirrorCode(mirrorCode) ?: throw InvalidInputException("mirror code","존재하지 않는 정보입니다.")
         return weatherService.shortTerm(mirror.member.area.des)
     }
+
+    /**
+     * 좌표로 거울 단기 조회
+     */
+    @GetMapping("/mirror/shortTerm/point") //mirror
+    fun pointMirrorShortTerm(@RequestHeader("mirrorCode") mirrorCode:String):Map<*,*>?{
+        val mirror = mirrorRepository.findByMirrorCode(mirrorCode) ?: throw InvalidInputException("mirror code","존재하지 않는 정보입니다.")
+        return weatherService.mirrorShortTerm(mirror)
+    }
+
 
     @GetMapping("/shelter/{area}")//대피소 정보 검색
     fun searchShelter(@PathVariable area: String): BaseResponse<Map<*,*>>?{
@@ -99,10 +111,11 @@ class WeatherController(
     }
 
     /**
-     * 미세 먼지 검색, 특정 지역 X일 경우 전국
+     * 미세먼지 검색
      */
     @GetMapping("/dust")
-    fun dustInfo(@RequestHeader("area") area: String = "전국"):BaseResponse<Map<*,*>>?{
+    fun dustInfo(@RequestHeader("area") area: String?):BaseResponse<Map<*,*>>?{
+        area?: throw InvalidInputException("area","헤더에 지역정보가 없습니다.")
         return BaseResponse(data=weatherService.dustInfo(area))
     }
 
@@ -131,6 +144,14 @@ class WeatherController(
     @GetMapping("/nation/dust")
     fun nationDustInfo():BaseResponse<Map<*,*>>?{
         return BaseResponse(data = weatherService.minuDust())
+    }
+
+    /**
+     * 좌표로 대피소 조회
+     */
+    @GetMapping("/point/shelter")//대피소 정보 회원
+    fun pointMemberShelter(@RequestBody @Valid pointShelterDtoRequest: PointShelterDtoRequest): BaseResponse<Map<*,*>>?{
+        return BaseResponse(data = weatherService.pointShelter(pointShelterDtoRequest))
     }
 
     /*@GetMapping("/earthQuake")
