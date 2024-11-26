@@ -75,22 +75,11 @@ class WeatherController(
         return BaseResponse(data = weatherMapService.weatherMapService())
     }
 
-    @GetMapping("/weekWeather")
-    fun weekWeather():String?{
-        val result:String? = weatherService.weekWeather()
-        return result
-    }
-
-    @GetMapping("/threeWeather")
-    fun threeWeather():String?{
-        val result:String? = weatherService.threeWeather()
-        return result
-    }
-
-    @GetMapping("/specialReport")
-    fun specialReport():String?{
-        val result:String? = weatherService.specialReport()
-        return result
+    @GetMapping("/weekWeather")//일주일 날씨 정보 회원
+    fun weekWeather(): BaseResponse<Map<*,*>>?{
+        val userId = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userId
+        val member = memberRepository.findMemberById(userId)?: throw InvalidInputException("member","존재 하지 않는 멤버")
+        return BaseResponse(data = weatherService.weekWeather(member.area.des))
     }
 
     @GetMapping("/earthQuake")
@@ -116,5 +105,4 @@ class WeatherController(
         val result:String? = weatherService.live(/*LiveDto*/)
         return result
     }
-
 }
