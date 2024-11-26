@@ -1,7 +1,7 @@
 package systemSecurity.weatherOfaMirror.core.status
 
 enum class Area(val des: String, val dust: String){
-    SEOU("서울특별시","서울"),
+    SEOU("서울특별시","서울",),
     BUSA("부산광역시","부산"),
     DAEG("대구광역시","대구"),
     INCH("인천광역시","인천"),

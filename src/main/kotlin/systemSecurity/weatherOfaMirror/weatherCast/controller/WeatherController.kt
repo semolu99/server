@@ -71,11 +71,31 @@ class WeatherController(
         return BaseResponse(data = weatherMapService.weatherMapService())
     }
 
-    @GetMapping("/weekWeather")//일주일 날씨 정보 회원
-    fun weekWeather(): BaseResponse<Map<*,*>>?{
+    /**
+     * 일주일 날씨 정보 검색
+     */
+    @GetMapping("/weekWeather/{area}")
+    fun memberWeekWeather(@PathVariable area: String): BaseResponse<Map<*,*>>?{
+        return BaseResponse(data = weatherService.weekWeather(area))
+    }
+
+    /**
+     * 일주일 날씨 정보 회원
+     */
+    @GetMapping("/weekWeather/member")
+    fun memberWeekWeather(): BaseResponse<Map<*,*>>?{
         val userId = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userId
         val member = memberRepository.findMemberById(userId)?: throw InvalidInputException("member","존재 하지 않는 멤버")
         return BaseResponse(data = weatherService.weekWeather(member.area.des))
+    }
+
+    /**
+     * 일주일 날씨 정보 거울
+     */
+    @GetMapping("/weekWeather/mirror")//일주일 날씨 정보 거울
+    fun mirrorWeekWeather(@RequestHeader("mirrorCode") mirrorCode:String): BaseResponse<Map<*,*>>?{
+        val mirror = mirrorRepository.findByMirrorCode(mirrorCode) ?: throw InvalidInputException("mirror code","존재하지 않는 정보입니다.")
+        return BaseResponse(data = weatherService.weekWeather(mirror.member.area.des))
     }
 
     /**
