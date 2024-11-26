@@ -15,7 +15,6 @@ import systemSecurity.weatherOfaMirror.core.global.LocationService
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 @Service
 @Transactional
@@ -68,10 +67,10 @@ class WeatherService(
 
     fun shelter(area: String): Map<*, *>? {
         val coordinates = coordinateService.coordinatesFromAddress(area)?:throw InvalidInputException("지역","오류")
-        val startLot = String.format("%.6f", coordinates.first - 0.1)
-        val startLat = String.format("%.6f", coordinates.second - 0.1)
-        val endLot = String.format("%.6f", coordinates.first + 0.1)
-        val endLat = String.format("%.6f", coordinates.second + 0.1)
+        val startLot = String.format("%.6f", coordinates.first - 0.05)
+        val startLat = String.format("%.6f", coordinates.second - 0.05)
+        val endLot = String.format("%.6f", coordinates.first + 0.05)
+        val endLat = String.format("%.6f", coordinates.second + 0.05)
         val webClient: WebClient = WebClient
             .builder()
             .baseUrl("https://www.safetydata.go.kr")
@@ -155,6 +154,7 @@ class WeatherService(
         val gson = Gson()
         return gson.fromJson(result, Map::class.java)
     }
+
     /**
      * 미세 먼지 전국 및 지역별 정보
      */
