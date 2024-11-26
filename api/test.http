@@ -32,12 +32,9 @@ GET localhost:8080/mirror/weather/nation/dust
 
 ###
 GET localhost:8080/mirror/weather/weekWeather
-
+Authorization: Bearer {{Token}}
 ###
 GET localhost:8080/mirror/weather/threeWeather
-
-###
-GET localhost:8080/mirror/weather/specialReport
 
 ###
 GET localhost:8080/mirror/weather/typhoon
