@@ -9,7 +9,7 @@
 * 프로젝트 설명
   *  개발 목적
     * 재난 경보와 재난에 대한 대처법을 쉽게 확인하며, 날씨 정보를 앱이나 스마트 거울을 통해 안내하는 서비스 제작
-  * [API 문서](https://documenter.getpostman.com/view/37569238/2sAY517zLs, "POSTMAN document")
+  * [API 문서](https://documenter.getpostman.com/view/37569238/2sAY517zLs)
 ***
 * 구현 기능
   * 회원가입, 로그인, 내 정보 조회 기능을 구현했습니다.
